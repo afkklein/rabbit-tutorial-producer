@@ -1,18 +1,21 @@
 package com.afkklein.rabbittutorialproducer.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@AllArgsConstructor
 public class DirectConfig {
-    private static final Queue firstQueue = new AnonymousQueue();
-    private static final Queue secondQueue = new AnonymousQueue();
-    private static final Queue jsonQueue = new AnonymousQueue();
+    private final Queue firstQueue;
+    private final Queue secondQueue;
+    private final Queue jsonQueue;
 
     @Bean
     public Exchange directExchange() {
-        return new ExchangeBuilder("DIRECT-EXCHANGE-BASIC", ExchangeTypes.DIRECT)
+        return ExchangeBuilder
+                .directExchange("DIRECT-EXCHANGE-BASIC")
                 .durable(true)
                 .build();
     }
