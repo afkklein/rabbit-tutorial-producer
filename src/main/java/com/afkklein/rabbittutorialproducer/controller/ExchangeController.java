@@ -34,20 +34,9 @@ public class ExchangeController {
     }
 
     @PostMapping("json/{exchange}/{routingKey}")
-    public HttpEntity<?> postJsonOnExchange(@PathVariable String exchange,
-                                            @PathVariable String routingKey,
-                                            @RequestBody Person message) throws JsonProcessingException, UnsupportedEncodingException {
+    public HttpEntity<?> postJsonOnExchange(@PathVariable String exchange, @PathVariable String routingKey, @RequestBody Person message) {
         log.info("sending message " + message);
-
-        MessageProperties messageProperties = new MessageProperties();
-        messageProperties.setType(MediaType.APPLICATION_JSON_VALUE);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper
-                .writeValueAsString(message);
-        byte[] bytes = jsonString.getBytes("UTF-8");
-        Message messageT = new Message(bytes, messageProperties);
-
-        rabbitTemplate.convertAndSend(exchange, routingKey, messageT);
+        rabbitTemplate.convertAndSend(exchange, routingKey, message);
         return ResponseEntity.ok().build();
     }
 
